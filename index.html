@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Regalo Sorpresa</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      /* Added subtle CRT flicker */
+      
+      background: #000;
+      color: #fff;
+      font-family: 'Montserrat', sans-serif;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      text-align: center;
+      padding: 20px;
+      overflow: hidden;
+
+      /* CRT effect */
+      position: relative;
+    }
+
+    body::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      background: repeating-linear-gradient(
+        to bottom,
+        rgba(255,255,255,0.03),
+        rgba(255,255,255,0.03) 1px,
+        rgba(0,0,0,0.03) 2px
+      );
+      opacity: 0.25;
+    }
+
+    .instructions {
+      max-width: 600px;
+      margin-bottom: 30px;
+      font-size: 1.1rem;
+      line-height: 1.6;
+      opacity: 1;
+      transition: opacity 0.7s ease;
+    }
+
+    .input-container {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin-bottom: 20px;
+      opacity: 1;
+      transition: opacity 0.7s ease;
+    }
+    .digit {
+      width: 45px;
+      height: 55px;
+      font-size: 2rem;
+      text-align: center;
+      background: #111;
+      border: 1px solid #444;
+      color: #fff;
+      border-radius: 6px;
+    }
+
+    #reveal {
+      display: none;
+      opacity: 0;
+      transition: opacity 1s ease;
+      font-size: 1.6rem;
+      max-width: 600px;
+      line-height: 1.6;
+    }
+
+    .fade-out {
+      opacity: 0 !important;
+    }
+
+  
+      100% { opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="instructions" id="instructions">
+    Por favor introduce la contraseña
+  </div>
+
+  <div class="input-container" id="inputBox">
+    <input class="digit" maxlength="1" />
+    <input class="digit" maxlength="1" />
+    <input class="digit" maxlength="1" />
+    <input class="digit" maxlength="1" />
+    <input class="digit" maxlength="1" />
+    <input class="digit" maxlength="1" />
+  </div>
+
+  <div id="reveal">El código que buscas es 819.</div>
+
+  <script>
+    const CORRECT_CODE = "123456"; // Cambia aquí el código
+    const inputs = document.querySelectorAll('.digit');
+    const reveal = document.getElementById('reveal');
+    const instructions = document.getElementById('instructions');
+    const inputBox = document.getElementById('inputBox');
+
+    inputs.forEach((input, index) => {
+      input.addEventListener('input', () => {
+        if (input.value.length === 1 && index < inputs.length - 1) {
+          inputs[index + 1].focus();
+        }
+        checkCode();
+      });
+    });
+
+    function checkCode() {
+      const code = Array.from(inputs).map(i => i.value).join('');
+      if (code === CORRECT_CODE) {
+        instructions.classList.add('fade-out');
+        inputBox.classList.add('fade-out');
+        setTimeout(() => {
+          instructions.style.display = 'none';
+          inputBox.style.display = 'none';
+
+          reveal.style.display = 'block';
+          setTimeout(() => reveal.style.opacity = 1, 50);
+          reveal.textContent = "El código que buscas es 819.";
+        }, 700);
+      }
+    }
+
+    // Reset on reload
+    window.onload = () => {
+      inputs.forEach(i => i.value = "");
+    };
+  </script>
+</body>
+</html>
